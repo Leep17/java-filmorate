@@ -31,7 +31,7 @@ public class UserController {
             log.error("Ошибка валидации email: {}", user.getEmail());
             throw new ValidationException("Электронная почта не может быть пустой и должна содержать символ @");
         }
-        if (user.getLogin()== null || user.getLogin().isBlank() || user.getLogin().contains(" ")) {
+        if (user.getLogin() == null || user.getLogin().isBlank() || user.getLogin().contains(" ")) {
             log.error("Ошибка валидации login: {}", user.getLogin());
             throw new ValidationException("Логин не может быть пустым и содержать пробелы");
         }
