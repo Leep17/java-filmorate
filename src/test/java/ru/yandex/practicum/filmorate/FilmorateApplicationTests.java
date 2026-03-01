@@ -33,7 +33,7 @@ class FilmorateApplicationTests {
 
 
     @Test
-    void Description200() {
+    void description200() {
         Film film = testFilm();
         film.setDescription("A".repeat(200));
 
@@ -67,7 +67,7 @@ class FilmorateApplicationTests {
     }
 
     @Test
-    void shouldThrow_whenDurationZero() {
+    void durationZero() {
         Film film = testFilm();
         film.setDuration(0);
 
