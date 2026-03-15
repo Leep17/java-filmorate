@@ -53,5 +53,4 @@ public class FilmController {
     public void deleteLikes(@PathVariable Long id, @PathVariable Long userId){
         filmService.deleteLikes(id, userId);
     }
-
 }
