@@ -33,22 +33,7 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User create(User user) {
         log.info("Получен запрос на создание пользователя: {}", user);
-
-        if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@")) {
-            log.error("Ошибка валидации email: {}", user.getEmail());
-            throw new ValidationException("Электронная почта не может быть пустой и должна содержать символ @");
-        }
-        if (user.getLogin() == null || user.getLogin().isBlank() || user.getLogin().contains(" ")) {
-            log.error("Ошибка валидации login: {}", user.getLogin());
-            throw new ValidationException("Логин не может быть пустым и содержать пробелы");
-        }
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
-        if (user.getBirthday().isAfter(LocalDate.now()) && user.getBirthday() != null) {
-            log.error("Ошибка валидации даты рождения {}", user.getBirthday());
-            throw new ValidationException("Дата рождения не может быть в будущем");
-        }
+        validationUser(user);
         user.setId(getNextId());
         users.put(user.getId(), user);
         log.info("Пользователь успешно создан с id={}", user.getId());
@@ -89,6 +74,25 @@ public class InMemoryUserStorage implements UserStorage {
         log.error("Ошибка обновления: пользователь с id={} не найден", newUser.getId());
 
         throw new NotFoundException("Пользователь с id = " + newUser.getId() + " не найден");
+    }
+
+    private void validationUser(User user) {
+        if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@")) {
+            log.error("Ошибка валидации email: {}", user.getEmail());
+            throw new ValidationException("Электронная почта не может быть пустой и должна содержать символ @");
+        }
+        if (user.getLogin() == null || user.getLogin().isBlank() || user.getLogin().contains(" ")) {
+            log.error("Ошибка валидации login: {}", user.getLogin());
+            throw new ValidationException("Логин не может быть пустым и содержать пробелы");
+        }
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
+        }
+        if (user.getBirthday().isAfter(LocalDate.now()) && user.getBirthday() != null) {
+            log.error("Ошибка валидации даты рождения {}", user.getBirthday());
+            throw new ValidationException("Дата рождения не может быть в будущем");
+        }
+
     }
 
     private long getNextId() {

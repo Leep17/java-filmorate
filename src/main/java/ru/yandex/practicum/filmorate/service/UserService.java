@@ -33,11 +33,11 @@ public class UserService {
     }
 
     public void addFriends(Long userId, Long friendsID) {
-    User user = userStorage.findUserById(userId);
-    User friend = userStorage.findUserById(friendsID);
+        User user = userStorage.findUserById(userId);
+        User friend = userStorage.findUserById(friendsID);
 
-    user.getFriends().add(friendsID);
-    friend.getFriends().add(userId);
+        user.getFriends().add(friendsID);
+        friend.getFriends().add(userId);
     }
 
     public List<User> getFriends(Long userId) {

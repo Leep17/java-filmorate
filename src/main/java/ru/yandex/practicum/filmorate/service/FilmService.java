@@ -47,7 +47,7 @@ public class FilmService {
         film.getLikes().remove(userId);
     }
 
-    public List<Film> topTenFilms(Integer count) {
+    public List<Film> getTopFilms(Integer count) {
 
         return filmStorage.findAll().stream()
                 .sorted((f1, f2) -> f2.getLikes().size() - f1.getLikes().size())

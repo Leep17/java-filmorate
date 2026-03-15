@@ -34,26 +34,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film create(Film film) {
         log.info("Получен запрос на создание фильма: {}", film);
-
-        if (film.getName() == null || film.getName().isBlank()) {
-            log.error("Ошибка валидации: название фильма пустое");
-            throw new ValidationException("Название не может быть пустым");
-        }
-        if (film.getDescription() != null && film.getDescription().length() > 200) {
-            log.error("Ошибка валидации: описание превышает 200 символов");
-            throw new ValidationException("Максимальная длина описания — 200 символов");
-        }
-
-        if (film.getDuration() <= 0) {
-            log.error("Ошибка валидации: неверная продолжительность фильма {}", film.getDuration());
-            throw new ValidationException("Продолжительность фильма должна быть положительным числом.");
-        }
-
-        if (film.getReleaseDate().isBefore(releaseDate)) {
-            log.error("Ошибка валидации: дата релиза раньше 28.12.1895 {}", film.getReleaseDate());
-            throw new ValidationException("Дата релиза — не раньше 28 декабря 1895 года");
-        }
-
+        validationFilm(film);
         film.setId(getNextId());
         films.put(film.getId(), film);
         log.info("Фильм успешно создан с id={}", film.getId());
@@ -93,7 +74,28 @@ public class InMemoryFilmStorage implements FilmStorage {
         throw new NotFoundException("Фильм с id = " + newFilm.getId() + " не найден");
     }
 
-    private long getNextId() {
+    private void validationFilm(Film film) {
+        if (film.getName() == null || film.getName().isBlank()) {
+            log.error("Ошибка валидации: название фильма пустое");
+            throw new ValidationException("Название не может быть пустым");
+        }
+        if (film.getDescription() != null && film.getDescription().length() > 200) {
+            log.error("Ошибка валидации: описание превышает 200 символов");
+            throw new ValidationException("Максимальная длина описания — 200 символов");
+        }
+
+        if (film.getDuration() <= 0) {
+            log.error("Ошибка валидации: неверная продолжительность фильма {}", film.getDuration());
+            throw new ValidationException("Продолжительность фильма должна быть положительным числом.");
+        }
+
+        if (film.getReleaseDate().isBefore(releaseDate)) {
+            log.error("Ошибка валидации: дата релиза раньше 28.12.1895 {}", film.getReleaseDate());
+            throw new ValidationException("Дата релиза — не раньше 28 декабря 1895 года");
+        }
+    }
+
+        private long getNextId() {
         long currentMaxId = films.keySet()
                 .stream()
                 .mapToLong(id -> id)
