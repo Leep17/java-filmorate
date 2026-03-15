@@ -43,7 +43,8 @@ public class UserService {
     public List<User> getFriends (Long userId) {
         User user = userStorage.findUserById(userId);
         return user.getFriends().stream()
-                .map(id->userStorage.findUserById(id)).toList();
+                .map(id -> userStorage.findUserById(id))
+                .toList();
     }
 
     public void deleteFriends (Long userId, Long friendsID) {
@@ -59,7 +60,8 @@ public class UserService {
         User friend = userStorage.findUserById(friendsID);
 
        return user.getFriends().stream()
-               .filter(id->friend.getFriends().contains(id))
-               .map(id->userStorage.findUserById(id)).toList();
+               .filter(id -> friend.getFriends().contains(id))
+               .map(id -> userStorage.findUserById(id))
+               .toList();
     }
 }

@@ -50,7 +50,7 @@ public class FilmService {
     public List<Film> topTenFilms(Integer count) {
 
         return filmStorage.findAll().stream()
-                .sorted((f1, f2)->f2.getLikes().size()-f1.getLikes().size())
+                .sorted((f1, f2) -> f2.getLikes().size() - f1.getLikes().size())
                 .limit(count)
                 .toList();
     }
