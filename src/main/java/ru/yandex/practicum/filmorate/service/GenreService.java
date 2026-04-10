@@ -14,11 +14,11 @@ public class GenreService {
         this.genreStorage = genreStorage;
     }
 
-    public Collection<Genre> findAll(){
+    public Collection<Genre> findAll() {
         return genreStorage.findAll();
     }
 
-    public Genre findGenreById(Long id){
+    public Genre findGenreById(Long id) {
         return genreStorage.findGenreById(id);
     }
 }

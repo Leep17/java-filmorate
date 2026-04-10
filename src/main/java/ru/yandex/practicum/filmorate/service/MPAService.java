@@ -14,11 +14,11 @@ public class MPAService {
         this.mpaStorage = mpaStorage;
     }
 
-    public Collection<MPA> findAll(){
+    public Collection<MPA> findAll() {
         return mpaStorage.findAll();
     }
 
-    public MPA findMPAById(Long id){
+    public MPA findMPAById(Long id) {
         return mpaStorage.findMPAById(id);
     }
 }

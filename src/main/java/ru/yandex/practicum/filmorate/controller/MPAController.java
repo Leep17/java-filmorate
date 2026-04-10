@@ -22,12 +22,12 @@ public class MPAController {
     }
 
     @GetMapping("/{id}")
-    public MPA findMPAById(@PathVariable Long id){
+    public MPA findMPAById(@PathVariable Long id) {
         return mpaService.findMPAById(id);
     }
 
     @GetMapping
-    public Collection<MPA> findAll(){
+    public Collection<MPA> findAll() {
         return mpaService.findAll();
     }
 }
