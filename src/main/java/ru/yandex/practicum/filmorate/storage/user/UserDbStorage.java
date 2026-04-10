@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class UserDbStorage implements UserStorage{
+public class UserDbStorage implements UserStorage {
 
     private static final String FIND_ALL_QUERY = "SELECT * FROM users";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM users WHERE id = ?";

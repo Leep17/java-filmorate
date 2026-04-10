@@ -10,7 +10,7 @@ import ru.yandex.practicum.filmorate.model.MPA;
 import java.util.Collection;
 
 @Repository
-public class MPADbStorage implements MPAStorage{
+public class MPADbStorage implements MPAStorage {
 
     private static final String FIND_ALL_QUERY = "SELECT * FROM mpa";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM mpa WHERE id = ?";
@@ -32,7 +32,7 @@ public class MPADbStorage implements MPAStorage{
     public MPA findMPAById(Long id) {
         try {
             return jdbc.queryForObject(FIND_BY_ID_QUERY, mpaRowMapper, id);
-        }catch (EmptyResultDataAccessException ignored) {
+        } catch (EmptyResultDataAccessException ignored) {
             throw new NotFoundException("Рейтинг с id=" + id + " не найден");
         }
     }
