@@ -1,82 +1,38 @@
 package ru.yandex.practicum.filmorate;
 
-import org.junit.jupiter.api.Assertions;
+import lombok.RequiredArgsConstructor;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.filmorate.controller.FilmController;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.model.Film;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 
-import java.time.LocalDate;
+import org.springframework.context.annotation.Import;
+import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserRowMapper;
 
-@SpringBootTest
+
+import java.util.Optional;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+@JdbcTest
+@AutoConfigureTestDatabase
+@Import({UserDbStorage.class, UserRowMapper.class})
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 class FilmorateApplicationTests {
-
-    @Autowired
-    private FilmController filmController;
-    private static final LocalDate minDate = LocalDate.of(1895, 12, 28);
-
-    private Film testFilm() {
-        Film film = new Film();
-        film.setName("Film");
-        film.setDescription("Description");
-        film.setReleaseDate(minDate);
-        film.setDuration(100);
-        return film;
-    }
-
-	@Test
-	void contextLoads() {
-        Film created = filmController.create(testFilm());
-
-        Assertions.assertNotNull(created.getId());
-        Assertions.assertEquals("Film", created.getName());
-	}
-
+    private final UserDbStorage userStorage;
 
     @Test
-    void description200() {
-        Film film = testFilm();
-        film.setDescription("A".repeat(200));
+    public void testFindUserById() {
 
-        Film created = filmController.create(film);
+        Optional<User> userOptional = userStorage.findUserById(1L);
 
-        Assertions.assertEquals(200, created.getDescription().length());
+        assertThat(userOptional)
+                .isPresent()
+                .hasValueSatisfying(user ->
+                        assertThat(user).hasFieldOrPropertyWithValue("id", 1L)
+                );
     }
-
-    @Test
-    void emptyName() {
-        Film film = testFilm();
-        film.setName("");
-
-        Assertions.assertThrows(ValidationException.class, () -> filmController.create(film));
-    }
-
-    @Test
-    void descriptionMoreThan200() {
-        Film film = testFilm();
-        film.setDescription("A".repeat(201));
-
-        Assertions.assertThrows(ValidationException.class, () -> filmController.create(film));
-    }
-
-    @Test
-    void releaseDateBefore1895() {
-        Film film = testFilm();
-        film.setReleaseDate(LocalDate.of(1895, 12, 27));
-
-        Assertions.assertThrows(ValidationException.class, () -> filmController.create(film));
-    }
-
-    @Test
-    void durationZero() {
-        Film film = testFilm();
-        film.setDuration(0);
-
-        Assertions.assertThrows(ValidationException.class, () -> filmController.create(film));
-    }
-
-
-
 }
