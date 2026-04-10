@@ -1,70 +1,39 @@
 package ru.yandex.practicum.filmorate;
 
-import org.junit.jupiter.api.Assertions;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.filmorate.controller.UserController;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.model.User;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.context.annotation.Import;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.film.FilmDbStorage;
+import ru.yandex.practicum.filmorate.storage.film.FilmRowMapper;
+import ru.yandex.practicum.filmorate.storage.genre.GenreRowMapper;
 
-import java.time.LocalDate;
 
+import java.util.Optional;
 
-@SpringBootTest
-public class UserApplicationTests {
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-    @Autowired
-    private UserController userController;
-
-    private User testUser() {
-        User user = new User();
-        user.setEmail("test@mail.ru");
-        user.setLogin("login");
-        user.setName("Name");
-        user.setBirthday(LocalDate.of(2025,1,1));
-        return user;
-    }
+@JdbcTest
+@AutoConfigureTestDatabase
+@Import({FilmDbStorage.class, FilmRowMapper.class, GenreRowMapper.class})
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
+public class UserApplicationTests   {
+    private final FilmDbStorage filmStorage;
 
     @Test
-    void contextLoads() {
-        User created = userController.create(testUser());
+    public void testFindFilmById() {
 
-        Assertions.assertNotNull(created.getId());
-        Assertions.assertEquals("login", created.getLogin());
+        Optional<Film> filmOptional = filmStorage.findFilmById(1L);
+
+        assertThat(filmOptional)
+                .isPresent()
+                .hasValueSatisfying(film ->
+                        assertThat(film).hasFieldOrPropertyWithValue("id", 1L)
+                );
     }
 
-    @Test
-    void emptyName() {
-        User user = testUser();
-        user.setName("");
 
-        User created = userController.create(user);
-
-        Assertions.assertEquals(created.getLogin(), created.getName());
-    }
-
-    @Test
-    void emailWrong() {
-        User user = testUser();
-        user.setEmail("wrongEmail");
-
-        Assertions.assertThrows(ValidationException.class, () -> userController.create(user));
-    }
-
-    @Test
-    void loginSpace() {
-        User user = testUser();
-        user.setLogin("log in");
-
-        Assertions.assertThrows(ValidationException.class, () -> userController.create(user));
-    }
-
-    @Test
-    void birthdayInFuture() {
-        User user = testUser();
-        user.setBirthday(LocalDate.now().plusDays(1));
-
-        Assertions.assertThrows(ValidationException.class, () -> userController.create(user));
-    }
 }
