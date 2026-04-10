@@ -34,6 +34,4 @@ public class UserApplicationTests   {
                         assertThat(film).hasFieldOrPropertyWithValue("id", 1L)
                 );
     }
-
-
 }
