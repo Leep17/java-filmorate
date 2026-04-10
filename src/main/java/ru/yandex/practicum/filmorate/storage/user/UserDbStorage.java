@@ -41,6 +41,7 @@ public class UserDbStorage implements UserStorage {
         this.jdbc = jdbc;
         this.userRowMapper = userRowMapper;
     }
+    
     @Override
     public User create(User user) {
         SimpleJdbcInsert insert = new SimpleJdbcInsert(jdbc)
