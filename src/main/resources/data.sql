@@ -16,3 +16,6 @@ VALUES (1, 'test@mail.ru', 'testLogin', 'Test', DATE '2000-01-01');
 
 MERGE INTO films (id, name, description, release_date, duration, mpa_id) KEY (id)
 VALUES (1, 'Test Film', 'Test description', DATE '2000-01-01', 120, 1);
+
+ALTER TABLE users ALTER COLUMN id RESTART WITH 2;
+ALTER TABLE films ALTER COLUMN id RESTART WITH 2;
